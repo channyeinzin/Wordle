@@ -5,6 +5,7 @@
 - [Overview](#overview)
 - [Game Process Description](#game-process-description)
 - [Functions Review](#functions-review)
+- [Running the Flask Application](#running-the-flask-application)
 
 ## Overview
 
@@ -39,3 +40,17 @@ Let's delve into the core functions responsible for driving the gameplay:
 
 These functions work together seamlessly to provide an interactive and enjoyable gaming experience for players.
 
+## Running the Flask Application
+
+To run the Flask application locally, follow these steps:
+
+### 1. Install Dependencies
+
+Ensure you have Python and pip installed on your system. If not, download and install Python from the [official Python website](https://www.python.org/downloads/).
+
+Next, open your terminal and navigate to the directory containing your Flask application.
+
+Install the required Python packages by running the following command:
+
+```bash
+pip install flask colorama
