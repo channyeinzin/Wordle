@@ -126,9 +126,11 @@ function submitGuess() {
 
     if (guess.length < gameSettings.width) return; // Ensure the guess is complete
 
+    // Check if the guess matches the target word
     if (guess === gameState.targetWord) {
         alert("Congratulations! You've guessed the word!");
         gameState.gameOver = true;
+        applyColorToTiles(guess); // Apply color for the correct guess
     } else {
         checkWordValidity(guess)
             .then(isValidWord => {
@@ -136,21 +138,45 @@ function submitGuess() {
                     alert("Not a valid word.");
                     return;
                 }
+                applyColorToTiles(guess); // Apply colors based on letter accuracy
                 proceedToNextAttempt();
             });
     }
 }
 
-// Check if the guessed word is valid using jQuery AJAX
+
+// After submitting a guess and checking its validity
+function applyColorToTiles(guess) {
+    for (let i = 0; i < guess.length; i++) {
+        const guessedLetter = guess[i];
+        const tile = $(`#${gameState.currentAttempt.row}-${i}`);
+        // Check if the letter is in the correct position
+        if (guessedLetter === gameState.targetWord[i]) {
+            tile.addClass('correct');
+        } 
+        // Check if the letter is present in the word but in the wrong position
+        else if (gameState.targetWord.includes(guessedLetter)) {
+            tile.addClass('present');
+        } 
+        // If the letter is not in the word
+        else {
+            tile.addClass('absent');
+        }
+    }
+}
+
+
 function checkWordValidity(word) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         $.ajax({
             url: `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
             type: 'GET',
             success: function(data) {
-                resolve(!(data instanceof Array && data[0] && data[0].word !== word));
+                // If the data is an array with at least one entry, the word is valid
+                resolve(Array.isArray(data) && data.length > 0);
             },
-            error: function(xhr, status, error) {
+            error: function() {
+                // If the API call fails (e.g., word not found), resolve false
                 resolve(false);
             }
         });
